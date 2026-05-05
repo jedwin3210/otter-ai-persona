@@ -31,7 +31,7 @@ from jupyterlab_chat.models import Message
 from langchain.agents import create_agent
 from langchain.agents.middleware import wrap_tool_call
 from langchain.messages import ToolMessage
-from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
+from langgraph.checkpoint.memory import MemorySaver
 
 from jupyter_ai_jupyternaut.jupyternaut.chat_models import ChatLiteLLM
 from jupyter_ai_jupyternaut.jupyternaut.toolkits.notebook import toolkit as nb_toolkit
@@ -470,7 +470,7 @@ class OtterPersona(BasePersona):
 
     async def _get_agent(self, model_id: str, model_args: dict, system_prompt: str):
         model = ChatLiteLLM(**model_args, model=model_id, streaming=True)
-        memory_store = await self._get_memory_store()
+        memory_store = MemorySaver()
         return create_agent(
             model,
             system_prompt=system_prompt,
